@@ -3,7 +3,7 @@ from collections import defaultdict as __defaultdict
 from numpy import interp as __interp
 
 itv1000_2000_3000 = __re.compile("""^ITV([1-3]0[135][01]-([0-3][1-4]|40|52|53|60|CC|DE|PR|RC|IL)[NTF]?[1-4][BC]?[SLN][2-5]?(-X(102|224|25|256|26))?|[12]0[135][01]-[0-3][1-4][NTF]?[1-3][BC]?[SLN][2-5]?-X88|[1-3]0[135][01]-[0-3][1-4][NTF]?[1-4][BC]?[SLN][2-5]?-X410|[1-3]0[135][01]-[0-3][23][NTF]?[1-4][BC]?[SLN][2-5]?-X420|10[135][01]-([0-3][1-4]|40)[NTF]?[12][BC]?[SLN][2-5]?-X10|20[135][01]-([0-3][1-4]|40)[NTF]?[23][BC]?[SLN][2-5]?-X10)""")
-itv1100_2100_3100 = __re.compile("^ITV[1-3]1[135][01]-([0-3][1-4]|40)[NF]?[2-4]?[BC]?[SLN][2-5]?")
+itv1100_2100_3100 = __re.compile("^ITV[1-3]1[135][01]-([0-3][1-5]|40)[NF]?[1-4][BC]?[SLN][2-5]?")
 itv209 = __re.compile("^ITV209(0-(([0-3][1-4]|40|52|53|IL)[NTF]?2[BC]?[SLN]5|(CC|DE|PR|RC)[NTF]?2[BC]?[SLN]|50[NTF]?2[BC]?[SN]5)|1-([0-3][1-4]|40)[NTF]?2[BC]?[SLN]5)")
 itv0000 = __re.compile("^ITV00[135][01]-[0-3]U?M?[BC]?[NSL]")
 iitv0000 = __re.compile("^IITV00-(0[2-9]|10)U?-?") #Needs work itv 39/36/5

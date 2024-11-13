@@ -13,7 +13,7 @@ from claims_data import re_patterns
 # with open("itvs_formatted.txt", 'w') as f2:
 #     f2.write(s)
 
-filename = "itv_excel.txt"
+filename = "P398020-600_level1s.txt"
 
 with open(filename, 'r') as f:
     lines = f.readlines()

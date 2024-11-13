@@ -41,31 +41,48 @@ def create_condition(parent_frame: tk.Frame | tk.LabelFrame) -> tk.Frame:
 def return_function(arg):
     return arg
 
-def if_creation(parent_frame: tk.Frame, creation_func):
+def if_creation(parent_frame: tk.Frame):
     outer_frame = tk.Frame(parent_frame)
     remove_button = tk.Button(outer_frame, text="-", command=outer_frame.destroy)
     if_label = tk.Label(outer_frame, text="If")
     condition_frame = create_condition(outer_frame)
-    # condition_frame = creation_func()
-    bool_ops_button = tk.Button(outer_frame, text="+", command=lambda: add_condition(parent_frame=condition_frame))
+    bool_ops_button = tk.Button(outer_frame, text="+", command=lambda: add_condition(parent_frame=outer_frame))
     colon_label = tk.Label(outer_frame, text=":")
     return outer_frame
     
 
 def add_condition(parent_frame: tk.Frame):
-    previous_condition_frame = parent_frame.winfo_children()[1]
-    print(parent_frame, previous_condition_frame)
     parent_frame.grid_forget() #parent of previous_condition_frame
+    # for item in parent_frame.winfo_children():
+    #     item.grid_forget()
     condition_frame = tk.Frame(parent_frame)
-    condition_1 = previous_condition_frame
     and_or_var = tk.StringVar(condition_frame)
     and_or_var.set("AND")
     and_or = tk.OptionMenu(condition_frame, and_or_var, "AND", "OR")
     condition_2 = create_condition(condition_frame)
     tile_widgets(condition_frame, by_column=True)
     condition_frame.grid()
+    # print(parent_frame.winfo_children())
+    # tile_widgets(parent_frame)
+    children = parent_frame.winfo_children()
+    index = 0
+    found_label = False
+    for i, item in enumerate(children):
+        if isinstance(item, tk.Label): 
+            if found_label:
+                index = i - 1
+                break
+            else:
+                found_label = True
+    end_index = -1
+    for i in range(len(children)):
+        if not isinstance(children[-(i + 1)], tk.Frame):
+            end_index = -i
+            break
+    new_lis = children[:index] + children[end_index:] + children[index:end_index]
+    for i, widget in enumerate(new_lis):
+        widget.grid(row=int(i==len(new_lis)-1), column=i*int(i!=len(new_lis)-1), padx=5, pady=5)
     parent_frame.grid()
-    # return if_creation(parent_frame=parent_frame, creation_func=lambda: return_function(condition_frame))
 
 
 def create_variable_if(parent_frame: tk.Frame | tk.LabelFrame, row: int = 0, column: int = 0, grid: bool = True, padx: int = 5, pady: int = 5) -> tk.Frame:
@@ -78,7 +95,7 @@ def create_variable_if(parent_frame: tk.Frame | tk.LabelFrame, row: int = 0, col
     # condition_frame = create_condition(outer_frame)
     # bool_ops_button = tk.Button(outer_frame, text="+", command=lambda: add_condition(outer_frame, condition_frame))
     # colon_label = tk.Label(outer_frame, text=":")
-    outer_frame = if_creation(parent_frame=parent_frame, creation_func=lambda: create_condition(parent_frame))
+    outer_frame = if_creation(parent_frame=parent_frame)
     tile_widgets(outer_frame, by_column=True)
     value_box = tk.Entry(outer_frame)
     value_box.grid(row=1, column=1)

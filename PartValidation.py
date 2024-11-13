@@ -18,7 +18,13 @@ def part_check():
         if re.fullmatch(re_patterns[i][0], part_number):
             part_type = re_patterns[i][1]
             part_number_sections = part_number.split("-")
-            (x, y, z, weight, description) = re_patterns[i][2](part_type, part_number_sections)
+            try:
+                (x, y, z, weight, description) = re_patterns[i][2](part_type, part_number_sections)
+            except:
+                error_string = f"No wframe found for {i}, {re_patterns[i][1]}"
+                print(error_string)
+                write_output(error_string)
+                break
             info_string = f"Part Number: {part_number}\nX: {x}\nY: {y}\nZ: {z}\nWeight: {weight}\nDescription: {description}"
             if printing_outputs:
                 print(info_string)

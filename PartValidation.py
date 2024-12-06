@@ -1,6 +1,6 @@
 import tkinter as tk
 import re
-from claims_data import re_patterns
+from pv_data import re_patterns
 from re_builder import main
 
 printing_outputs = False

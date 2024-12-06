@@ -22,6 +22,10 @@ izt_res = (r"(16|22|34|40|46|58|64|82|112|130|160|190|232|250)", r"[DELMVS][1-3]
            r"(28|52|70|76|88|94|100|106|118|124|136|142|148|154|166|172|178|184|196|202|208|214|220|226|238|244)", r"L-[NJKMSTZ][NEGHJKMPQRSTZ]")
 izt = __re.compile(fr"^IZT4(0-{''.join(izt_res[:2])}-{''.join(izt_res[2:5])}|[12]-{''.join(izt_res[:2])}(P?-{izt_res[2]}|{izt_res[6]}){''.join(izt_res[3:5])}|0-{izt_res[5]}{izt_res[1]}-{''.join(izt_res[2:4])}-X10|[12]-{izt_res[5]}{izt_res[1]}(P?-{izt_res[2]}|{izt_res[6]}){izt_res[3]}-X10|3-[DL][1-3][67][HL](P?-{izt_res[2]}|{izt_res[6]}){izt_res[3]})")
 
+izt_bcpn = __re.compile(fr"^IZT(B4[02]-({''.join(izt_res[:2])}(-[BF])?(-X14)?|{izt_res[5]}{izt_res[1]}(-[BF])?-X1[04])|C4(0-(3|5|10|15|N)(-W)?|1-(P?(3|5|10|15|N)|L[NJKMSTZ][NEGHJKMPQRSTZ])(-W)?)|P4([0-3]|[1-3]-L)(-Y)?|N43-[DL][1-3][67][HL](-F)?)")
+
+izt_acc = __re.compile("^IZ(T4(0-(N[DELM]|B([EM][12]|[1-3])|C(P(3|5|10|15)|G[12]|F[1-3])|E[12])|1-C(P[JKMSTZ]|E[EGHJKMPQRSTZ])|3-(N[DL]|BL[12]|A00(1-[DL][67][HL]|2-[1-3])|M2))|S(30-(M2|A020[12])|40-(N[VS]|E[2-5])))")
+
 izs_lengths = (340, 400, 460, 580, 640, 820, 1120, 1300, 1600, 1900, 2320, 2500)
 izs_weights = ((590, 640, 690, 790, 830, 980, 1220, 1360, 1600, 1840, 2170, 2320), 
                (740, 790, 840, 940, 980, 1130, 1370, 1510, 1750, 1990, 2320, 2470),
@@ -74,6 +78,8 @@ izt_bar_weights = (((360, 420, 530, 590, 650, 760, 820, 990, 1270, 1440, 1720, 2
 
 izs_ys = (73, 94, 94)
 izs_zs = (30, 44, 44)
+
+itv0000_dimensions = (15, 59.7, 82)
 
 itv1000_weights = (__defaultdict(lambda: 250, {"CC": 330, "DE": 320, "PR": 350, "RC": 320, "IL": 320}), 
                    __defaultdict(lambda: 350, {"CC": 430, "DE": 420, "PR": 450, "RC": 420, "IL": 420}), 
@@ -131,6 +137,11 @@ def izs_wframe(part_type, part_number_sections):
     description = descriptions[part_type]
     return (x, y, z, weight, description)
 
+def itv0000_wframe(part_type, part_number_sections):
+    x, y, z = itv0000_dimensions
+    weight = 100
+    # return (x, y, z, weight, description)
+
 def itv1000_wframe(part_type, part_number_sections):
     patterns = patterns_table[part_type]
     model_type = __re.findall(patterns[0], part_number_sections[0])[0]
@@ -187,8 +198,8 @@ def izt_wframe(part_type, part_number_sections):
             left_end = izt_fittings[fitting]
         x = bar_length + 36 + left_end + 325
         weight = __interp(bar_length, izt_bar_lengths, izt_bar_weights[id][voltage_cable]) + izt_controller_weights[id][io_link_blint] + izt_power_weights[id][io_link_blint]
-    description = descriptions[part_type]
-    return (x, y, z, weight, description[int(id == 3)])
+    description = descriptions[part_type][int(id == 3)]
+    return (x, y, z, weight, description)
 
 re_patterns = (
     (itv0000, "ITV00", None), 
@@ -202,4 +213,6 @@ re_patterns = (
     (itvh2000, "ITVH2000", itvh2000_wframe), 
     (izs, "IZS", izs_wframe), 
     (izs_acc, "IZS_ACC", None), 
-    (izt, "IZT", izt_wframe))
+    (izt, "IZT", izt_wframe),
+    (izt_bcpn, "IZT_BCPN", None),
+    (izt_acc, "IZT_ACC", None))

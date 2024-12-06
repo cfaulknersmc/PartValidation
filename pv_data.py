@@ -18,7 +18,7 @@ izs = __re.compile("""^IZS4(0-(340|400|460|580|640|820|1120|1300|1600|1900|2320|
 
 izs_acc = __re.compile("^IZ(S(3(1-D[FG]|0-M2)|4([01]-CP(Z|([01][1-9]|[12]0)-X13)?|0-(N[TCJKVS]|B[EM]|E[3-5])|1(RC|C(G[12]|F((0[134679]|1[1-9]|[12]0)-X13|0[258])))))|F10-CG[12])")
 
-izt_res = (r"(16|22|34|40|46|58|64|82|112|130|160|190|232|250)", r"[DELMVS][1-3]([4-9]|[AB])[HL][QR]?", r"3|5|10|15|N", r"[BF]?[UWY]?", r"(-X14)?",
+izt_res = (r"(16|22|34|40|46|58|64|82|112|130|160|190|232|250)", r"[DELMVS][1-3]([4-9]|[AB])[HL][QR]?", r"(3|5|10|15|N)", r"[BF]?[UWY]?", r"(-X14)?",
            r"(28|52|70|76|88|94|100|106|118|124|136|142|148|154|166|172|178|184|196|202|208|214|220|226|238|244)", r"L-[NJKMSTZ][NEGHJKMPQRSTZ]")
 izt = __re.compile(fr"^IZT4(0-{''.join(izt_res[:2])}-{''.join(izt_res[2:5])}|[12]-{''.join(izt_res[:2])}(P?-{izt_res[2]}|{izt_res[6]}){''.join(izt_res[3:5])}|0-{izt_res[5]}{izt_res[1]}-{''.join(izt_res[2:4])}-X10|[12]-{izt_res[5]}{izt_res[1]}(P?-{izt_res[2]}|{izt_res[6]}){izt_res[3]}-X10|3-[DL][1-3][67][HL](P?-{izt_res[2]}|{izt_res[6]}){izt_res[3]})")
 
@@ -117,7 +117,7 @@ patterns_table = {
 }
 
 rohs = __defaultdict(lambda: None, {
-    "ITV1000": (3,),
+    "ITV1000": (3, 3, ), #Don't know about ITV30-X10
     "ITV1100": (3, 3, 3),
     "ITV209": 3,
     "ITVX2000": 3,

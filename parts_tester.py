@@ -13,7 +13,7 @@ from pv_data import re_patterns
 # with open("itvs_formatted.txt", 'w') as f2:
 #     f2.write(s)
 
-filename = "P398020-600_level1s.txt"
+filename = "izts.txt"
 
 with open(filename, 'r') as f:
     lines = f.readlines()
@@ -28,19 +28,21 @@ def part_check(part_number):
 
 sum = 0
 failed = 0
-with open(filename[:-4] + "_failed.txt", 'w') as f2:
-    for line in lines:
-        line = line.strip()
-        result = part_check(line)
-        if not result:
-            result_line = line + " FAILED\n"
-            print(result_line, end='')
-            f2.write(result_line)
-            failed += 1
-        else:
-            print(line)
-        sum += 1
-print(f"{sum - failed} succeeded, {failed} failed out of {sum} or {failed/sum:.3f}% failed.")
+with open(filename[:-4] + "_success.txt", 'w') as f2_success:
+    with open(filename[:-4] + "_failed.txt", 'w') as f2:
+        for line in lines:
+            line = line.strip()
+            result = part_check(line)
+            if not result:
+                result_line = line + " FAILED\n"
+                print(result_line, end='')
+                f2.write(result_line)
+                failed += 1
+            else:
+                f2_success.write(line + "\n")
+                print(line)
+            sum += 1
+print(f"{sum - failed} succeeded, {failed} failed out of {sum} or {100*failed/sum:.3f}% failed.")
     
 
 # table = ET.XML(s)

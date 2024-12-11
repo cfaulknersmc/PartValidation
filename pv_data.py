@@ -16,7 +16,12 @@ itvh2000 = __re.compile("^ITVH2020-([0-3][1-4]|40)[NF]?[23][BC]?[SLN][2-4]?")
 
 izs = __re.compile("""^IZS4(0-(340|400|460|580|640|820|1120|1300|1600|1900|2320|2500)[CJKVS]?[ZN]?-(0[4-9]|1[01])B?(-X14)?|[12]-(340|400|460|580|640|820|1120|1300|1600|1900|2320|2500)[CJKVS]?P?[ZN]?-(0[4-9]|1[01])B?[FG]?(-X14)?|0-(520|700|760|880|940|1000|1060|1180|1240|1360|1420|1480|1540|1660|1720|1780|1840|1960|2020|2080|2140|2200|2260|2380|2440)[CJKVS]?[ZN]?-(0[4-9]|1[01])B?-X1[04]|[12]-(520|700|760|880|940|1000|1060|1180|1240|1360|1420|1480|1540|1660|1720|1780|1840|1960|2020|2080|2140|2200|2260|2380|2440)[CJKVS]?P?[ZN]?-(0[4-9]|1[01])B?[FG]?-X1[04])""")
 
-izs_acc = __re.compile("^IZ(S(3(1-D[FG]|0-M2)|4([01]-CP(Z|([01][1-9]|[12]0)-X13)?|0-(N[TCJKVS]|B[EM]|E[3-5])|1(RC|C(G[12]|F((0[134679]|1[1-9]|[12]0)-X13|0[258])))))|F10-CG[12])")
+izs_acc = __re.compile("^IZ(S(3(1-D[FG]|0-M2)|4([01]-CP(Z|([01][1-9]|[12]0)-X13)?|0-(N[TCJKVS]|B[EM]|E[3-5])|1-(RC|C(G[12]|F((0[134679]|1[1-9]|[12]0)-X13|0[258])))))|F10-CG[12])")
+
+izs31_res = (r"[CSJK]?P?[ZN]?(-(B[EFG]?|B?[EFG]))?",)
+izs31 = __re.compile(fr"^IZS31-((300|380|620|780|1100|1260|1500|1900|2300){izs31_res[0]}(-X14)?|(460|540|700|860|940|1020|1180|1340|1420|1580|1660|1740|1820|1980|2060|2140|2220){izs31_res[0]}-X1[04]|(300|380|620|780|1100|1260){izs31_res[0]}-X15|(180|220)[CSJK]?P?R?[ZN]?(-(B[EFG]?|B?[EFG]))?-X21[01])") #Need to do combined specials
+
+izs31_acc = __re.compile("^IZS3(1-(C(PZ?|F|R)|D[FGE]|N[TCSJK]|B[EML]|E[3-5]|CP([01][1-9]|20)-X13|FP?-X196|CF(0[1-5]|07|10)-X210)|0-M[12])")
 
 izt_res = (r"(16|22|34|40|46|58|64|82|112|130|160|190|232|250)", r"[DELMVS][1-3]([4-9]|[AB])[HL][QR]?", r"(3|5|10|15|N)", r"[BF]?[UWY]?", r"(-X14)?",
            r"(28|52|70|76|88|94|100|106|118|124|136|142|148|154|166|172|178|184|196|202|208|214|220|226|238|244)", r"L-[NJKMSTZ][NEGHJKMPQRSTZ]")
@@ -25,6 +30,13 @@ izt = __re.compile(fr"^IZT4(0-{''.join(izt_res[:2])}-{''.join(izt_res[2:5])}|[12
 izt_bcpn = __re.compile(fr"^IZT(B4[02]-({''.join(izt_res[:2])}(-[BF])?(-X14)?|{izt_res[5]}{izt_res[1]}(-[BF])?-X1[04])|C4(0-(3|5|10|15|N)(-W)?|1-(P?(3|5|10|15|N)|L[NJKMSTZ][NEGHJKMPQRSTZ])(-W)?)|P4([0-3]|[1-3]-L)(-Y)?|N43-[DL][1-3][67][HL](-F)?)")
 
 izt_acc = __re.compile("^IZ(T4(0-(N[DELM]|B([EM][12]|[1-3])|C(P(3|5|10|15)|G[12]|F[1-3])|E[12])|1-C(P[JKMSTZ]|E[EGHJKMPQRSTZ])|3-(N[DL]|BL[12]|A00(1-[DL][67][HL]|2-[1-3])|M2))|S(30-(M2|A020[12])|40-(N[VS]|E[2-5])))")
+
+izt44_res = (r"(20|26|32|38|44|50|56|62|68|74|92|128)",)
+izt44 = __re.compile(fr"^IZT4(4-{izt44_res[0]}-[1-3]-(3|5|10|N)V?|5-{izt44_res[0]}-[1-3]-(3|5|10|N)[UWY]?)")
+
+izt44_bcp = __re.compile(fr"^IZT(B44-{izt44_res[0]}-[123N](-B)?|C4(4-(3|5|10|N)V?|5-(3|5|10|N)W?)|P41-L(-Y)?)")
+
+izt44_acc = __re.compile("^IZT4(4-(B[EM1]|A001|M3)|[45]-C(P(3|5|10)|G[12]))")
 
 izs_lengths = (340, 400, 460, 580, 640, 820, 1120, 1300, 1600, 1900, 2320, 2500)
 izs_weights = ((590, 640, 690, 790, 830, 980, 1220, 1360, 1600, 1840, 2170, 2320), 
@@ -117,13 +129,14 @@ patterns_table = {
 }
 
 rohs = __defaultdict(lambda: None, {
-    "ITV1000": (3, 3, ), #Don't know about ITV30-X10
+    "ITV1000": (3, 3, ), #Don't know about ITV30-X10.
     "ITV1100": (3, 3, 3),
     "ITV209": 3,
     "ITVX2000": 3,
     "ITVH2000": 3,
     "IZS": 3,
-    "IZT": 3
+    "IZT": 3,
+    "ITVE_P": 3, #The DUX02357 is RoHS by word of Alan
 })
 
 def izs_wframe(part_type, part_number_sections):
@@ -211,8 +224,13 @@ re_patterns = (
     (itve_p, "ITVE_P", None), 
     (itvx2000, "ITVX2000", itvx2000_wframe), 
     (itvh2000, "ITVH2000", itvh2000_wframe), 
-    (izs, "IZS", izs_wframe), 
-    (izs_acc, "IZS_ACC", None), 
+    (izs, "IZS", izs_wframe),
+    (izs_acc, "IZS_ACC", None),
+    (izs31, "IZS31", None),
+    (izs31_acc, "IZS31_ACC", None),
     (izt, "IZT", izt_wframe),
     (izt_bcpn, "IZT_BCPN", None),
-    (izt_acc, "IZT_ACC", None))
+    (izt_acc, "IZT_ACC", None),
+    (izt44, "IZT44", None),
+    (izt44_bcp, "IZT44_BCP", None),
+    (izt44_acc, "IZT44_ACC", None))

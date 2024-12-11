@@ -13,7 +13,9 @@ from pv_data import re_patterns
 # with open("itvs_formatted.txt", 'w') as f2:
 #     f2.write(s)
 
-filename = "izts.txt"
+verbose = False
+
+filename = "izss_full.txt"
 
 with open(filename, 'r') as f:
     lines = f.readlines()
@@ -35,12 +37,12 @@ with open(filename[:-4] + "_success.txt", 'w') as f2_success:
             result = part_check(line)
             if not result:
                 result_line = line + " FAILED\n"
-                print(result_line, end='')
+                if verbose: print(result_line, end='')
                 f2.write(result_line)
                 failed += 1
             else:
                 f2_success.write(line + "\n")
-                print(line)
+                if verbose: print(line)
             sum += 1
 print(f"{sum - failed} succeeded, {failed} failed out of {sum} or {100*failed/sum:.3f}% failed.")
     
